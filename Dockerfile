@@ -1,9 +1,6 @@
-FROM tomcat:9.0-jre11-temurin-jammy
+FROM --platform=linux/amd64 rockylinux:9.2.20230513-minimal@sha256:6ff3d41b1fea114dfe6f3b8cf0517a0806f9410404df7e931c32b65f7e76d1d8
 
-COPY . .
+RUN curl -sLO https://corretto.aws/downloads/latest/amazon-corretto-11-x64-linux-jdk.rpm
+RUN rpm -i amazon-corretto-11-x64-linux-jdk.rpm
 
-RUN apt-get update ; apt-get install maven default-jdk -y ; update-alternatives --config javac
-
-RUN mvn clean package ; cp target/*.war /usr/local/tomcat/webapps/
-
-CMD ["catalina.sh","run"]
+# Regression: https://github.com/anchore/syft/issues/264
